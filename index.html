@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Los Perritos — Camino a $100K</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0f1a;--surface:#111827;--surface2:#1a2332;--border:#1e293b;
+  --text:#e2e8f0;--muted:#64748b;--accent:#10b981;--accent2:#34d399;
+  --blue:#3b82f6;--blue2:#60a5fa;--red:#ef4444;--amber:#f59e0b;
+  --purple:#a78bfa;
+  --font-display:'Instrument Serif',serif;
+  --font-body:'DM Sans',sans-serif;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-height:100vh;overflow-x:hidden}
+.noise{position:fixed;inset:0;opacity:.03;pointer-events:none;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.glow{position:fixed;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:600px;background:radial-gradient(ellipse,rgba(16,185,129,.07) 0%,transparent 70%);pointer-events:none}
+
+.container{max-width:1100px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}
+
+header{text-align:center;padding:3rem 0 2rem;animation:fadeUp .8s ease}
+header h1{font-family:var(--font-display);font-size:clamp(2.5rem,5vw,3.8rem);font-weight:400;letter-spacing:-.02em;line-height:1.1;margin-bottom:.5rem}
+header h1 span{color:var(--accent);font-style:italic}
+header p{color:var(--muted);font-size:1.05rem;font-weight:300}
+
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:2rem 0;animation:fadeUp .8s ease .1s both}
+.metric{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.25rem 1.5rem;position:relative;overflow:hidden;transition:border-color .3s,transform .3s}
+.metric:hover{border-color:var(--accent);transform:translateY(-2px)}
+.metric .label{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.35rem}
+.metric .value{font-family:var(--font-display);font-size:1.8rem;font-weight:400}
+.metric .sub{font-size:.8rem;color:var(--muted);margin-top:.25rem}
+.metric.highlight .value{color:var(--accent)}
+.metric.highlight::after{content:'';position:absolute;top:0;right:0;width:80px;height:80px;background:radial-gradient(circle at 100% 0%,rgba(16,185,129,.1),transparent 70%)}
+
+.progress-section{margin:2rem 0;animation:fadeUp .8s ease .2s both}
+.progress-bar-bg{height:28px;background:var(--surface);border-radius:14px;overflow:hidden;border:1px solid var(--border);position:relative}
+.progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:14px;transition:width 1s cubic-bezier(.4,0,.2,1);position:relative;min-width:60px;display:flex;align-items:center;justify-content:flex-end;padding-right:12px;font-size:.75rem;font-weight:600;color:var(--bg)}
+.progress-labels{display:flex;justify-content:space-between;margin-top:.5rem;font-size:.8rem;color:var(--muted)}
+
+.controls{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem 2rem;margin:2rem 0;animation:fadeUp .8s ease .3s both}
+.controls-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem 3rem}
+.control-group label{display:block;font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.5rem}
+.control-row{display:flex;align-items:center;gap:1rem}
+.control-row input[type=range]{flex:1;-webkit-appearance:none;background:transparent;height:6px}
+.control-row input[type=range]::-webkit-slider-track{height:4px;background:var(--border);border-radius:2px}
+.control-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--bg);box-shadow:0 0 8px rgba(16,185,129,.3)}
+.control-val{font-family:var(--font-display);font-size:1.3rem;min-width:70px;text-align:right;color:var(--accent)}
+
+.chart-section{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2rem;margin:2rem 0;animation:fadeUp .8s ease .4s both}
+.chart-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem}
+.chart-header h2{font-family:var(--font-display);font-size:1.6rem;font-weight:400}
+.chart-legend{display:flex;gap:1.25rem;flex-wrap:wrap}
+.chart-legend span{display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--muted)}
+.chart-legend .dot{width:10px;height:10px;border-radius:3px}
+.chart-wrap{position:relative;height:380px}
+
+.scenarios{margin:2rem 0;animation:fadeUp .8s ease .5s both}
+.scenarios h2{font-family:var(--font-display);font-size:1.6rem;margin-bottom:1rem}
+.scenario-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.scenario{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.25rem;text-align:center;transition:all .3s}
+.scenario:hover{border-color:var(--accent);transform:translateY(-2px)}
+.scenario.active{border-color:var(--accent);background:var(--surface2)}
+.scenario.active::before{content:'Esperado';position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--accent);color:var(--bg);font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;padding:2px 10px;border-radius:10px;font-weight:600}
+.scenario{position:relative}
+.scenario .s-rate{font-family:var(--font-display);font-size:1.8rem;color:var(--accent2);margin-bottom:.25rem}
+.scenario .s-label{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.75rem}
+.scenario .s-time{font-size:1.1rem;font-weight:500;margin-bottom:.15rem}
+.scenario .s-date{font-size:.85rem;color:var(--muted)}
+
+.milestones{margin:2rem 0;animation:fadeUp .8s ease .6s both}
+.milestones h2{font-family:var(--font-display);font-size:1.6rem;margin-bottom:1rem}
+.milestone-track{position:relative;padding:1rem 0}
+.milestone-line{position:absolute;top:50%;left:0;right:0;height:2px;background:var(--border);transform:translateY(-50%)}
+.milestone-dots{display:flex;justify-content:space-between;position:relative}
+.milestone-dot{display:flex;flex-direction:column;align-items:center;gap:.5rem;cursor:default}
+.milestone-dot .dot-circle{width:36px;height:36px;border-radius:50%;background:var(--surface);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:600;transition:all .3s;z-index:1}
+.milestone-dot.reached .dot-circle{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.milestone-dot.goal .dot-circle{background:var(--amber);border-color:var(--amber);color:var(--bg);width:42px;height:42px}
+.milestone-dot .dot-label{font-size:.75rem;color:var(--muted);white-space:nowrap}
+.milestone-dot .dot-value{font-family:var(--font-display);font-size:1rem}
+
+.compound-section{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2rem;margin:2rem 0;animation:fadeUp .8s ease .7s both}
+.compound-section h2{font-family:var(--font-display);font-size:1.6rem;margin-bottom:.5rem}
+.compound-section .subtitle{color:var(--muted);font-size:.9rem;margin-bottom:1.5rem}
+.compound-chart-wrap{position:relative;height:320px}
+
+.footer-insight{text-align:center;padding:2rem 0;color:var(--muted);font-size:.85rem;animation:fadeUp .8s ease .8s both}
+.footer-insight a{color:var(--accent);text-decoration:none}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:768px){
+  .metrics{grid-template-columns:repeat(2,1fr)}
+  .scenario-grid{grid-template-columns:repeat(2,1fr)}
+  .controls-grid{grid-template-columns:1fr}
+  .milestone-dots{flex-wrap:wrap;gap:1rem;justify-content:center}
+  .milestone-line{display:none}
+}
+</style>
+</head>
+<body>
+<div class="noise"></div>
+<div class="glow"></div>
+
+<div class="container">
+  <header>
+    <h1>Los Perritos hacia <span>$100K</span></h1>
+    <p>Proyección de inversión en VOO (S&P 500) &mdash; Camilo & Carlos</p>
+  </header>
+
+  <div class="metrics">
+    <div class="metric">
+      <div class="label">Valor actual</div>
+      <div class="value" id="m-value">$7,309</div>
+      <div class="sub">12 acciones VOO</div>
+    </div>
+    <div class="metric">
+      <div class="label">Precio VOO</div>
+      <div class="value">$609</div>
+      <div class="sub">~COP 2,328,000</div>
+    </div>
+    <div class="metric highlight">
+      <div class="label">Tiempo estimado</div>
+      <div class="value" id="m-time">7.8 años</div>
+      <div class="sub" id="m-date">Dic 2033</div>
+    </div>
+    <div class="metric">
+      <div class="label">El mercado pone</div>
+      <div class="value" id="m-gain" style="color:var(--accent2)">$36,255</div>
+      <div class="sub">Ganancia por interés compuesto</div>
+    </div>
+  </div>
+
+  <div class="progress-section">
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="prog-fill" style="width:7.3%">7.3%</div>
+    </div>
+    <div class="progress-labels">
+      <span>$0</span><span>$25K</span><span>$50K</span><span>$75K</span><span>$100K</span>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="controls-grid">
+      <div class="control-group">
+        <label>Retorno anual esperado</label>
+        <div class="control-row">
+          <input type="range" id="rateSlider" min="5" max="18" value="10.5" step="0.5">
+          <div class="control-val" id="rateVal">10.5%</div>
+        </div>
+      </div>
+      <div class="control-group">
+        <label>Acciones compradas por mes</label>
+        <div class="control-row">
+          <input type="range" id="buySlider" min="1" max="4" value="1" step="1">
+          <div class="control-val" id="buyVal">1</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-section">
+    <div class="chart-header">
+      <h2>Crecimiento del portafolio</h2>
+      <div class="chart-legend">
+        <span><span class="dot" style="background:var(--accent)"></span>Valor total</span>
+        <span><span class="dot" style="background:var(--blue)"></span>Invertido</span>
+        <span><span class="dot" style="background:var(--red);opacity:.5"></span>Meta $100K</span>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="mainChart"></canvas></div>
+  </div>
+
+  <div class="scenarios">
+    <h2>Escenarios de llegada</h2>
+    <div class="scenario-grid" id="scenarioGrid"></div>
+  </div>
+
+  <div class="milestones">
+    <h2>Hitos del camino</h2>
+    <div class="milestone-track">
+      <div class="milestone-line"></div>
+      <div class="milestone-dots" id="milestoneDots"></div>
+    </div>
+  </div>
+
+  <div class="compound-section">
+    <h2>El poder del interés compuesto</h2>
+    <p class="subtitle">Comparación: solo ahorro vs. invertido en VOO con diferentes retornos</p>
+    <div class="compound-chart-wrap"><canvas id="compoundChart"></canvas></div>
+  </div>
+
+  <div class="footer-insight">
+    Datos basados en rendimiento histórico del VOO (S&P 500). El rendimiento pasado no garantiza resultados futuros.<br>
+    Última actualización: Marzo 2026 &mdash; Precio VOO: $609.09
+  </div>
+</div>
+
+<script>
+const PRICE=609.09, INIT_SHARES=12, GOAL=100000;
+
+function simulate(annualRate,monthlyBuy,maxMonths=180){
+  const mr=Math.pow(1+annualRate/100,1/12)-1;
+  let shares=INIT_SHARES,price=PRICE,invested=INIT_SHARES*PRICE,divAcc=0;
+  const vals=[],invs=[],divs=[];
+  let goalMonth=-1;
+  for(let m=0;m<=maxMonths;m++){
+    const v=shares*price;
+    vals.push(Math.round(v));invs.push(Math.round(invested));divs.push(Math.round(divAcc));
+    if(v>=GOAL&&goalMonth===-1)goalMonth=m;
+    price*=(1+mr);shares+=monthlyBuy;invested+=monthlyBuy*price;
+    divAcc+=v*0.01195/12;
+  }
+  return{vals,invs,divs,goalMonth,goalShares:goalMonth>0?INIT_SHARES+goalMonth*monthlyBuy:null,goalInvested:goalMonth>0?invs[goalMonth]:null};
+}
+
+function goalDate(months){
+  const d=new Date();d.setMonth(d.getMonth()+months);
+  return d.toLocaleDateString('es-CO',{month:'short',year:'numeric'});
+}
+
+const chartColor={text:'#94a3b8',grid:'#1e293b'};
+
+const mainCtx=document.getElementById('mainChart');
+let data=simulate(10.5,1);
+const labels=Array.from({length:181},(_,i)=>i);
+
+const mainChart=new Chart(mainCtx,{
+  type:'line',
+  data:{labels,datasets:[
+    {label:'Valor',data:data.vals,borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.06)',fill:true,tension:.35,pointRadius:0,borderWidth:2},
+    {label:'Invertido',data:data.invs,borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.04)',fill:true,tension:.35,pointRadius:0,borderWidth:1.5,borderDash:[4,3]},
+  ]},
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    interaction:{mode:'index',intersect:false},
+    plugins:{legend:{display:false},tooltip:{
+      backgroundColor:'#1e293b',titleColor:'#e2e8f0',bodyColor:'#94a3b8',borderColor:'#334155',borderWidth:1,
+      padding:12,cornerRadius:8,
+      callbacks:{title:i=>'Mes '+i[0].label+' (Año '+(i[0].parsed.x/12).toFixed(1)+')',label:i=>i.dataset.label+': $'+Number(i.raw).toLocaleString()}
+    }},
+    scales:{
+      x:{grid:{color:chartColor.grid,lineWidth:.5},ticks:{color:chartColor.text,font:{size:11},stepSize:12,callback:v=>v%12===0?'Año '+(v/12):''}},
+      y:{grid:{color:chartColor.grid,lineWidth:.5},ticks:{color:chartColor.text,font:{size:11},callback:v=>'$'+(v/1000).toFixed(0)+'K'},suggestedMax:200000}
+    }
+  },
+  plugins:[{afterDraw(ch){
+    const y=ch.scales.y.getPixelForValue(GOAL),x=ch.scales.x;
+    const c=ch.ctx;c.save();c.strokeStyle='#ef4444';c.lineWidth=1;c.setLineDash([6,4]);
+    c.beginPath();c.moveTo(x.left,y);c.lineTo(x.right,y);c.stroke();
+    c.fillStyle='#ef4444';c.font='600 11px "DM Sans"';c.fillText('Meta $100K',x.right-78,y-8);c.restore();
+  }}]
+});
+
+const scenarios=[
+  {rate:8,label:'Conservador',color:'var(--muted)'},
+  {rate:10.5,label:'Esperado',color:'var(--accent)',active:true},
+  {rate:12,label:'Optimista',color:'var(--blue2)'},
+  {rate:14.6,label:'Histórico 10Y',color:'var(--purple)'}
+];
+
+function renderScenarios(monthlyBuy){
+  const grid=document.getElementById('scenarioGrid');grid.innerHTML='';
+  scenarios.forEach(s=>{
+    const d=simulate(s.rate,monthlyBuy);
+    const div=document.createElement('div');div.className='scenario'+(s.active?' active':'');
+    div.innerHTML=`<div class="s-rate">${s.rate}%</div><div class="s-label">${s.label}</div><div class="s-time">${d.goalMonth>0?(d.goalMonth/12).toFixed(1)+' años':'>15 años'}</div><div class="s-date">${d.goalMonth>0?goalDate(d.goalMonth):'—'}</div>`;
+    grid.appendChild(div);
+  });
+}
+
+function renderMilestones(annualRate,monthlyBuy){
+  const d=simulate(annualRate,monthlyBuy);
+  const ms=[
+    {val:7309,label:'Hoy',reached:true},
+    {val:10000,label:'$10K'},
+    {val:25000,label:'$25K'},
+    {val:50000,label:'$50K'},
+    {val:75000,label:'$75K'},
+    {val:100000,label:'$100K',goal:true}
+  ];
+  const dots=document.getElementById('milestoneDots');dots.innerHTML='';
+  ms.forEach(m=>{
+    const month=d.vals.findIndex(v=>v>=m.val);
+    const el=document.createElement('div');
+    el.className='milestone-dot'+(m.reached?' reached':'')+(m.goal?' goal':'');
+    el.innerHTML=`<div class="dot-circle">${m.reached?'✓':month>0?Math.round(month/12)+'a':'?'}</div><div class="dot-value">${m.label}</div><div class="dot-label">${m.reached?'Mar 2026':month>0?goalDate(month):'—'}</div>`;
+    dots.appendChild(el);
+  });
+}
+
+const compoundCtx=document.getElementById('compoundChart');
+function buildCompound(monthlyBuy){
+  const months=Array.from({length:181},(_,i)=>i);
+  const noGrowth=months.map(m=>(INIT_SHARES+m*monthlyBuy)*PRICE);
+  const s8=simulate(8,monthlyBuy).vals;
+  const s10=simulate(10.5,monthlyBuy).vals;
+  const s14=simulate(14.6,monthlyBuy).vals;
+  return{noGrowth,s8,s10,s14,labels:months};
+}
+let compData=buildCompound(1);
+const compoundChart=new Chart(compoundCtx,{
+  type:'line',
+  data:{labels:compData.labels,datasets:[
+    {label:'Sin rendimiento',data:compData.noGrowth,borderColor:'#475569',borderWidth:1.5,borderDash:[4,3],pointRadius:0,tension:.3,fill:false},
+    {label:'8% anual',data:compData.s8,borderColor:'#64748b',borderWidth:1.5,pointRadius:0,tension:.3,fill:false},
+    {label:'10.5% anual',data:compData.s10,borderColor:'#10b981',borderWidth:2.5,pointRadius:0,tension:.3,fill:false},
+    {label:'14.6% anual',data:compData.s14,borderColor:'#a78bfa',borderWidth:1.5,pointRadius:0,tension:.3,fill:false},
+  ]},
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    interaction:{mode:'index',intersect:false},
+    plugins:{legend:{display:true,position:'top',labels:{color:chartColor.text,font:{family:'DM Sans',size:11},boxWidth:12,boxHeight:3,padding:16}},
+    tooltip:{backgroundColor:'#1e293b',titleColor:'#e2e8f0',bodyColor:'#94a3b8',borderColor:'#334155',borderWidth:1,padding:12,cornerRadius:8,
+      callbacks:{title:i=>'Mes '+i[0].label,label:i=>i.dataset.label+': $'+Number(i.raw).toLocaleString()}}},
+    scales:{
+      x:{grid:{color:chartColor.grid,lineWidth:.5},ticks:{color:chartColor.text,font:{size:11},stepSize:12,callback:v=>v%12===0?'Año '+(v/12):''}},
+      y:{grid:{color:chartColor.grid,lineWidth:.5},ticks:{color:chartColor.text,font:{size:11},callback:v=>'$'+(v/1000).toFixed(0)+'K'}}
+    }
+  },
+  plugins:[{afterDraw(ch){
+    const y=ch.scales.y.getPixelForValue(GOAL),x=ch.scales.x;
+    const c=ch.ctx;c.save();c.strokeStyle='rgba(239,68,68,0.4)';c.lineWidth=1;c.setLineDash([4,4]);
+    c.beginPath();c.moveTo(x.left,y);c.lineTo(x.right,y);c.stroke();c.restore();
+  }}]
+});
+
+function update(){
+  const rate=parseFloat(document.getElementById('rateSlider').value);
+  const buy=parseInt(document.getElementById('buySlider').value);
+  document.getElementById('rateVal').textContent=rate.toFixed(1)+'%';
+  document.getElementById('buyVal').textContent=buy;
+
+  const d=simulate(rate,buy);
+  mainChart.data.datasets[0].data=d.vals;
+  mainChart.data.datasets[1].data=d.invs;
+  mainChart.update('none');
+
+  const gm=d.goalMonth;
+  document.getElementById('m-time').textContent=gm>0?(gm/12).toFixed(1)+' años':'>15 años';
+  document.getElementById('m-date').textContent=gm>0?goalDate(gm):'—';
+  document.getElementById('m-gain').textContent=gm>0?'$'+Math.round(GOAL-d.goalInvested).toLocaleString():'—';
+
+  renderScenarios(buy);
+  renderMilestones(rate,buy);
+
+  const cd=buildCompound(buy);
+  compoundChart.data.datasets[0].data=cd.noGrowth;
+  compoundChart.data.datasets[1].data=cd.s8;
+  compoundChart.data.datasets[2].data=cd.s10;
+  compoundChart.data.datasets[3].data=cd.s14;
+  compoundChart.update('none');
+}
+
+document.getElementById('rateSlider').addEventListener('input',update);
+document.getElementById('buySlider').addEventListener('input',update);
+
+renderScenarios(1);
+renderMilestones(10.5,1);
+</script>
+</body>
+</html>
