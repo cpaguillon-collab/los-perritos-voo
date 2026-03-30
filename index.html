@@ -492,11 +492,30 @@ tbody td:last-child{padding-right:2rem;text-align:right}
 
 <script>
 // ══════════════════════════════════════════
-// GIST CONFIG — reemplaza con tus valores
+// GIST CONFIG — token viene de la URL
 // ══════════════════════════════════════════
-const GIST_ID    = 'c6cc7c5f432204b51af9a928229a96f4';
-const GIST_TOKEN = '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';
+const GIST_ID    = 'PEGA-TU-GIST-ID-AQUI';
 const GIST_FILE  = 'purchases.json';
+const _p         = new URLSearchParams(window.location.search);
+const GIST_TOKEN = _p.get('token') || '';
+
+// Si no hay token en la URL, muestra instrucción
+if (!GIST_TOKEN) {
+  document.addEventListener('DOMContentLoaded', () => {
+    document.body.innerHTML = `
+    <div style="font-family:'DM Sans',sans-serif;background:#0a0f1a;color:#e2e8f0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem">
+      <div style="max-width:520px;text-align:center">
+        <div style="font-size:3rem;margin-bottom:1rem">🐶</div>
+        <h1 style="font-size:1.8rem;margin-bottom:.75rem">Los Perritos</h1>
+        <p style="color:#64748b;margin-bottom:2rem">Abre la página con tu link personal que incluye el token:</p>
+        <code style="background:#111827;border:1px solid #1e293b;border-radius:10px;padding:1rem 1.5rem;display:block;font-size:.85rem;color:#10b981;word-break:break-all;text-align:left">
+          ${window.location.origin}${window.location.pathname}<strong>?token=ghp_TU_TOKEN</strong>
+        </code>
+        <p style="color:#64748b;font-size:.85rem;margin-top:1.5rem">Comparte el link completo con Camilo y Carlos — cada uno usa el mismo.</p>
+      </div>
+    </div>`;
+  });
+}
 
 // ══════════════════════════════════════════
 // DATA — se carga desde el Gist al iniciar
