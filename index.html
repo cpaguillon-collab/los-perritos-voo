@@ -12,7 +12,7 @@
   --bg:#0a0f1a;--surface:#111827;--surface2:#1a2332;--border:#1e293b;
   --text:#e2e8f0;--muted:#64748b;--accent:#10b981;--accent2:#34d399;
   --blue:#3b82f6;--blue2:#60a5fa;--red:#ef4444;--amber:#f59e0b;
-  --purple:#a78bfa;
+  --purple:#a78bfa;--camilo:#f97316;--carlos:#3b82f6;
   --font-display:'Instrument Serif',serif;
   --font-body:'DM Sans',sans-serif;
 }
@@ -20,13 +20,25 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-hei
 .noise{position:fixed;inset:0;opacity:.03;pointer-events:none;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 .glow{position:fixed;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:600px;background:radial-gradient(ellipse,rgba(16,185,129,.07) 0%,transparent 70%);pointer-events:none}
 
+/* ─── NAV TABS ─── */
+.tab-nav{position:sticky;top:0;z-index:100;background:rgba(10,15,26,.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.tab-nav-inner{max-width:1100px;margin:0 auto;padding:0 1.5rem;display:flex;gap:0;align-items:center}
+.tab-btn{background:none;border:none;cursor:pointer;font-family:var(--font-body);font-size:.875rem;font-weight:500;color:var(--muted);padding:1rem 1.25rem;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;letter-spacing:.01em}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-logo{font-family:var(--font-display);font-style:italic;font-size:1.1rem;color:var(--text);margin-right:1.5rem;padding:1rem 0}
+
+/* ─── PAGES ─── */
+.page{display:none}.page.active{display:block}
 .container{max-width:1100px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}
 
+/* ─── HEADER ─── */
 header{text-align:center;padding:3rem 0 2rem;animation:fadeUp .8s ease}
 header h1{font-family:var(--font-display);font-size:clamp(2.5rem,5vw,3.8rem);font-weight:400;letter-spacing:-.02em;line-height:1.1;margin-bottom:.5rem}
 header h1 span{color:var(--accent);font-style:italic}
 header p{color:var(--muted);font-size:1.05rem;font-weight:300}
 
+/* ─── METRICS ─── */
 .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:2rem 0;animation:fadeUp .8s ease .1s both}
 .metric{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.25rem 1.5rem;position:relative;overflow:hidden;transition:border-color .3s,transform .3s}
 .metric:hover{border-color:var(--accent);transform:translateY(-2px)}
@@ -36,11 +48,13 @@ header p{color:var(--muted);font-size:1.05rem;font-weight:300}
 .metric.highlight .value{color:var(--accent)}
 .metric.highlight::after{content:'';position:absolute;top:0;right:0;width:80px;height:80px;background:radial-gradient(circle at 100% 0%,rgba(16,185,129,.1),transparent 70%)}
 
+/* ─── PROGRESS ─── */
 .progress-section{margin:2rem 0;animation:fadeUp .8s ease .2s both}
 .progress-bar-bg{height:28px;background:var(--surface);border-radius:14px;overflow:hidden;border:1px solid var(--border);position:relative}
 .progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:14px;transition:width 1s cubic-bezier(.4,0,.2,1);position:relative;min-width:60px;display:flex;align-items:center;justify-content:flex-end;padding-right:12px;font-size:.75rem;font-weight:600;color:var(--bg)}
 .progress-labels{display:flex;justify-content:space-between;margin-top:.5rem;font-size:.8rem;color:var(--muted)}
 
+/* ─── CONTROLS ─── */
 .controls{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem 2rem;margin:2rem 0;animation:fadeUp .8s ease .3s both}
 .controls-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem 3rem}
 .control-group label{display:block;font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.5rem}
@@ -50,6 +64,7 @@ header p{color:var(--muted);font-size:1.05rem;font-weight:300}
 .control-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--bg);box-shadow:0 0 8px rgba(16,185,129,.3)}
 .control-val{font-family:var(--font-display);font-size:1.3rem;min-width:70px;text-align:right;color:var(--accent)}
 
+/* ─── CHARTS ─── */
 .chart-section{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2rem;margin:2rem 0;animation:fadeUp .8s ease .4s both}
 .chart-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem}
 .chart-header h2{font-family:var(--font-display);font-size:1.6rem;font-weight:400}
@@ -58,6 +73,7 @@ header p{color:var(--muted);font-size:1.05rem;font-weight:300}
 .chart-legend .dot{width:10px;height:10px;border-radius:3px}
 .chart-wrap{position:relative;height:380px}
 
+/* ─── SCENARIOS ─── */
 .scenarios{margin:2rem 0;animation:fadeUp .8s ease .5s both}
 .scenarios h2{font-family:var(--font-display);font-size:1.6rem;margin-bottom:1rem}
 .scenario-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
@@ -71,33 +87,142 @@ header p{color:var(--muted);font-size:1.05rem;font-weight:300}
 .scenario .s-time{font-size:1.1rem;font-weight:500;margin-bottom:.15rem}
 .scenario .s-date{font-size:.85rem;color:var(--muted)}
 
+/* ─── MILESTONES ─── */
 .milestones{margin:2rem 0;animation:fadeUp .8s ease .6s both}
 .milestones h2{font-family:var(--font-display);font-size:1.6rem;margin-bottom:1rem}
 .milestone-track{position:relative;padding:1rem 0}
 .milestone-line{position:absolute;top:50%;left:0;right:0;height:2px;background:var(--border);transform:translateY(-50%)}
 .milestone-dots{display:flex;justify-content:space-between;position:relative}
-.milestone-dot{display:flex;flex-direction:column;align-items:center;gap:.5rem;cursor:default}
+.milestone-dot{display:flex;flex-direction:column;align-items:center;gap:.5rem}
 .milestone-dot .dot-circle{width:36px;height:36px;border-radius:50%;background:var(--surface);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:600;transition:all .3s;z-index:1}
 .milestone-dot.reached .dot-circle{background:var(--accent);border-color:var(--accent);color:var(--bg)}
 .milestone-dot.goal .dot-circle{background:var(--amber);border-color:var(--amber);color:var(--bg);width:42px;height:42px}
 .milestone-dot .dot-label{font-size:.75rem;color:var(--muted);white-space:nowrap}
 .milestone-dot .dot-value{font-family:var(--font-display);font-size:1rem}
 
+/* ─── COMPOUND ─── */
 .compound-section{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2rem;margin:2rem 0;animation:fadeUp .8s ease .7s both}
 .compound-section h2{font-family:var(--font-display);font-size:1.6rem;margin-bottom:.5rem}
 .compound-section .subtitle{color:var(--muted);font-size:.9rem;margin-bottom:1.5rem}
 .compound-chart-wrap{position:relative;height:320px}
 
 .footer-insight{text-align:center;padding:2rem 0;color:var(--muted);font-size:.85rem;animation:fadeUp .8s ease .8s both}
-.footer-insight a{color:var(--accent);text-decoration:none}
 
+/* ══════════════════════════════════════════
+   TAB 2 — REGISTRO DE COMPRAS
+══════════════════════════════════════════ */
+.registro-header{padding:3rem 0 1.5rem;animation:fadeUp .6s ease}
+.registro-header h1{font-family:var(--font-display);font-size:clamp(2rem,4vw,3rem);font-weight:400;margin-bottom:.4rem}
+.registro-header p{color:var(--muted);font-size:.95rem}
+
+/* Summary cards */
+.reg-summary{display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;margin-bottom:2rem;animation:fadeUp .6s ease .1s both}
+.reg-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.1rem 1.25rem;transition:border-color .3s,transform .3s}
+.reg-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.reg-card .rc-label{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.3rem}
+.reg-card .rc-value{font-family:var(--font-display);font-size:1.6rem;font-weight:400}
+.reg-card .rc-sub{font-size:.75rem;color:var(--muted);margin-top:.2rem}
+.reg-card.camilo-card{border-color:rgba(249,115,22,.3)}
+.reg-card.camilo-card .rc-value{color:var(--camilo)}
+.reg-card.carlos-card{border-color:rgba(59,130,246,.3)}
+.reg-card.carlos-card .rc-value{color:var(--carlos)}
+
+/* Ownership bars */
+.ownership-section{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem 2rem;margin-bottom:2rem;animation:fadeUp .6s ease .15s both}
+.ownership-section h3{font-family:var(--font-display);font-size:1.3rem;margin-bottom:1rem}
+.own-bar-wrap{display:flex;height:20px;border-radius:10px;overflow:hidden;gap:2px;margin-bottom:.75rem}
+.own-bar-camilo{background:var(--camilo);border-radius:10px 0 0 10px;transition:width .6s ease;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:600;color:#fff}
+.own-bar-carlos{background:var(--carlos);border-radius:0 10px 10px 0;transition:width .6s ease;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:600;color:#fff}
+.own-legend{display:flex;gap:2rem}
+.own-legend-item{display:flex;align-items:center;gap:.5rem;font-size:.85rem}
+.own-legend-dot{width:10px;height:10px;border-radius:3px}
+
+/* Add purchase form */
+.add-section{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.75rem 2rem;margin-bottom:2rem;animation:fadeUp .6s ease .2s both}
+.add-section h3{font-family:var(--font-display);font-size:1.3rem;margin-bottom:1.25rem}
+.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.form-group{display:flex;flex-direction:column;gap:.4rem}
+.form-group label{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.form-group input,
+.form-group select{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:.7rem 1rem;color:var(--text);font-family:var(--font-body);font-size:.9rem;outline:none;transition:border-color .2s}
+.form-group input:focus,
+.form-group select:focus{border-color:var(--accent)}
+.form-group select option{background:var(--surface2)}
+.form-actions{display:flex;gap:1rem;margin-top:1.25rem;align-items:center;flex-wrap:wrap}
+.btn-primary{background:var(--accent);color:var(--bg);border:none;border-radius:10px;padding:.7rem 1.5rem;font-family:var(--font-body);font-size:.9rem;font-weight:600;cursor:pointer;transition:opacity .2s,transform .2s}
+.btn-primary:hover{opacity:.85;transform:translateY(-1px)}
+.btn-secondary{background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:10px;padding:.7rem 1.25rem;font-family:var(--font-body);font-size:.9rem;cursor:pointer;transition:all .2s}
+.btn-secondary:hover{border-color:var(--text);color:var(--text)}
+.form-note{font-size:.78rem;color:var(--muted)}
+
+/* Split preview */
+.split-preview{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:.9rem 1.25rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;font-size:.85rem;margin-top:1rem}
+.split-preview .sp-label{font-size:.7rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:.2rem}
+.split-preview .sp-value{font-family:var(--font-display);font-size:1.1rem}
+.sp-camilo .sp-value{color:var(--camilo)}
+.sp-carlos .sp-value{color:var(--carlos)}
+
+/* History table */
+.history-section{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;animation:fadeUp .6s ease .25s both}
+.history-header{display:flex;justify-content:space-between;align-items:center;padding:1.5rem 2rem;border-bottom:1px solid var(--border)}
+.history-header h3{font-family:var(--font-display);font-size:1.3rem}
+.filter-tabs{display:flex;gap:.5rem}
+.filter-btn{background:none;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:.35rem .85rem;font-family:var(--font-body);font-size:.78rem;cursor:pointer;transition:all .2s}
+.filter-btn.active{background:var(--accent);border-color:var(--accent);color:var(--bg);font-weight:600}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+thead tr{border-bottom:1px solid var(--border)}
+thead th{padding:.85rem 1.25rem;text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:500;white-space:nowrap}
+thead th:first-child{padding-left:2rem}
+thead th:last-child{padding-right:2rem;text-align:right}
+tbody tr{border-bottom:1px solid rgba(30,41,59,.5);transition:background .15s}
+tbody tr:hover{background:rgba(16,185,129,.03)}
+tbody tr:last-child{border-bottom:none}
+tbody td{padding:.9rem 1.25rem;font-size:.875rem;white-space:nowrap}
+tbody td:first-child{padding-left:2rem}
+tbody td:last-child{padding-right:2rem;text-align:right}
+.td-date{color:var(--muted);font-size:.82rem}
+.td-type{display:inline-flex;align-items:center;gap:.4rem;padding:.2rem .65rem;border-radius:6px;font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.td-type.compra{background:rgba(16,185,129,.1);color:var(--accent)}
+.td-type.dividendo{background:rgba(251,191,36,.1);color:var(--amber)}
+.td-type.split{background:rgba(167,139,250,.1);color:var(--purple)}
+.td-shares{font-weight:600}
+.td-cop{color:var(--muted);font-size:.82rem}
+.td-camilo{color:var(--camilo);font-size:.82rem}
+.td-carlos{color:var(--carlos);font-size:.82rem}
+.td-gain-pos{color:var(--accent);font-size:.82rem}
+.td-gain-neg{color:var(--red);font-size:.82rem}
+.badge-camilo{background:rgba(249,115,22,.15);color:var(--camilo);padding:.1rem .5rem;border-radius:5px;font-size:.72rem;font-weight:600}
+.badge-carlos{background:rgba(59,130,246,.15);color:var(--carlos);padding:.1rem .5rem;border-radius:5px;font-size:.72rem;font-weight:600}
+.badge-ambos{background:rgba(16,185,129,.12);color:var(--accent);padding:.1rem .5rem;border-radius:5px;font-size:.72rem;font-weight:600}
+
+.tfoot-row td{padding:1rem 1.25rem;font-weight:600;border-top:2px solid var(--border);background:var(--surface2);font-size:.9rem}
+.tfoot-row td:first-child{padding-left:2rem}
+.tfoot-row td:last-child{padding-right:2rem;text-align:right}
+
+.empty-state{padding:3rem;text-align:center;color:var(--muted)}
+.empty-state .e-icon{font-size:2rem;margin-bottom:.75rem}
+
+/* toast */
+.toast{position:fixed;bottom:2rem;right:2rem;background:var(--surface);border:1px solid var(--accent);border-radius:12px;padding:.9rem 1.25rem;font-size:.875rem;color:var(--text);box-shadow:0 8px 32px rgba(0,0,0,.4);transform:translateY(20px);opacity:0;transition:all .3s;z-index:999;pointer-events:none;max-width:320px}
+.toast.show{transform:translateY(0);opacity:1}
+.toast .t-title{font-weight:600;color:var(--accent);margin-bottom:.2rem}
+
+/* ─── UTILS ─── */
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 @media(max-width:768px){
-  .metrics{grid-template-columns:repeat(2,1fr)}
+  .metrics,.reg-summary{grid-template-columns:repeat(2,1fr)}
   .scenario-grid{grid-template-columns:repeat(2,1fr)}
   .controls-grid{grid-template-columns:1fr}
   .milestone-dots{flex-wrap:wrap;gap:1rem;justify-content:center}
   .milestone-line{display:none}
+  .form-grid{grid-template-columns:1fr 1fr}
+  .split-preview{grid-template-columns:1fr 1fr}
+}
+@media(max-width:480px){
+  .form-grid{grid-template-columns:1fr}
+  .reg-summary{grid-template-columns:repeat(2,1fr)}
 }
 </style>
 </head>
@@ -105,6 +230,22 @@ header p{color:var(--muted);font-size:1.05rem;font-weight:300}
 <div class="noise"></div>
 <div class="glow"></div>
 
+<!-- ─── TABS NAV ─── -->
+<nav class="tab-nav">
+  <div class="tab-nav-inner">
+    <div class="tab-logo">Los Perritos 🐶</div>
+    <button class="tab-btn active" onclick="switchTab('dashboard')">Dashboard</button>
+    <button class="tab-btn" onclick="switchTab('registro')">Registro de Compras</button>
+    <div style="margin-left:auto;padding:.75rem 0" id="sync-indicator">
+      <span style="color:var(--muted);font-size:.8rem">Conectando...</span>
+    </div>
+  </div>
+</nav>
+
+<!-- ════════════════════════════════════════
+     TAB 1 — DASHBOARD
+════════════════════════════════════════ -->
+<div id="page-dashboard" class="page active">
 <div class="container">
   <header>
     <h1>Los Perritos hacia <span>$100K</span></h1>
@@ -114,13 +255,13 @@ header p{color:var(--muted);font-size:1.05rem;font-weight:300}
   <div class="metrics">
     <div class="metric">
       <div class="label">Valor actual</div>
-      <div class="value" id="m-value">$7,309</div>
-      <div class="sub">12 acciones VOO</div>
+      <div class="value" id="m-value">—</div>
+      <div class="sub" id="m-shares-label">— acciones VOO</div>
     </div>
     <div class="metric">
       <div class="label">Precio VOO</div>
-      <div class="value">$609</div>
-      <div class="sub">~COP 2,328,000</div>
+      <div class="value" id="m-price">$583</div>
+      <div class="sub" id="m-price-cop">~COP 2,328,000</div>
     </div>
     <div class="metric highlight">
       <div class="label">Tiempo estimado</div>
@@ -129,7 +270,7 @@ header p{color:var(--muted);font-size:1.05rem;font-weight:300}
     </div>
     <div class="metric">
       <div class="label">El mercado pone</div>
-      <div class="value" id="m-gain" style="color:var(--accent2)">$36,255</div>
+      <div class="value" id="m-gain" style="color:var(--accent2)">—</div>
       <div class="sub">Ganancia por interés compuesto</div>
     </div>
   </div>
@@ -194,172 +335,668 @@ header p{color:var(--muted);font-size:1.05rem;font-weight:300}
   </div>
 
   <div class="footer-insight">
-    Datos basados en rendimiento histórico del VOO (S&P 500). El rendimiento pasado no garantiza resultados futuros.<br>
-    Última actualización: Marzo 2026 &mdash; Precio VOO: $609.09
+    Datos basados en rendimiento histórico del VOO (S&amp;P 500). El rendimiento pasado no garantiza resultados futuros.<br>
+    Última actualización: Marzo 2026 — Precio VOO actual calculado desde historial.
   </div>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     TAB 2 — REGISTRO DE COMPRAS
+════════════════════════════════════════ -->
+<div id="page-registro" class="page">
+<div class="container">
+  <div class="registro-header">
+    <h1>Registro de <span style="color:var(--accent);font-style:italic">Compras</span></h1>
+    <p>Historial de transacciones y participación de cada perrito 🐾</p>
+  </div>
+
+  <!-- Summary -->
+  <div class="reg-summary">
+    <div class="reg-card">
+      <div class="rc-label">Total Acciones</div>
+      <div class="rc-value" id="rc-shares">—</div>
+      <div class="rc-sub">VOO</div>
+    </div>
+    <div class="reg-card">
+      <div class="rc-label">Invertido Total</div>
+      <div class="rc-value" id="rc-total">—</div>
+      <div class="rc-sub" id="rc-total-cop">— COP</div>
+    </div>
+    <div class="reg-card camilo-card">
+      <div class="rc-label">Camilo</div>
+      <div class="rc-value" id="rc-camilo-shares">—</div>
+      <div class="rc-sub" id="rc-camilo-cop">— acciones</div>
+    </div>
+    <div class="reg-card carlos-card">
+      <div class="rc-label">Carlos</div>
+      <div class="rc-value" id="rc-carlos-shares">—</div>
+      <div class="rc-sub" id="rc-carlos-cop">— acciones</div>
+    </div>
+    <div class="reg-card">
+      <div class="rc-label">Dividendos</div>
+      <div class="rc-value" id="rc-divs" style="color:var(--amber)">—</div>
+      <div class="rc-sub">COP recibidos</div>
+    </div>
+  </div>
+
+  <!-- Ownership bar -->
+  <div class="ownership-section">
+    <h3>Participación del portafolio</h3>
+    <div class="own-bar-wrap">
+      <div class="own-bar-camilo" id="own-bar-camilo" style="width:50%">Camilo</div>
+      <div class="own-bar-carlos" id="own-bar-carlos" style="width:50%">Carlos</div>
+    </div>
+    <div class="own-legend">
+      <div class="own-legend-item"><div class="own-legend-dot" style="background:var(--camilo)"></div><span id="own-legend-camilo">Camilo — 50%</span></div>
+      <div class="own-legend-item"><div class="own-legend-dot" style="background:var(--carlos)"></div><span id="own-legend-carlos">Carlos — 50%</span></div>
+    </div>
+  </div>
+
+  <!-- Add purchase -->
+  <div class="add-section">
+    <h3>Registrar nueva compra</h3>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Fecha</label>
+        <input type="date" id="f-date">
+      </div>
+      <div class="form-group">
+        <label>Tipo</label>
+        <select id="f-type">
+          <option value="compra">Compra de acciones</option>
+          <option value="dividendo">Dividendo</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Número de acciones</label>
+        <input type="number" id="f-shares" placeholder="ej: 1 o 0.5" step="0.5" min="0">
+      </div>
+      <div class="form-group">
+        <label>Costo total (COP)</label>
+        <input type="number" id="f-cost" placeholder="ej: 2,300,000" min="0">
+      </div>
+      <div class="form-group">
+        <label>Fee / Comisión (COP)</label>
+        <input type="number" id="f-fee" placeholder="ej: 14,875" value="14875" min="0">
+      </div>
+      <div class="form-group">
+        <label>¿Quién compra?</label>
+        <select id="f-who">
+          <option value="ambos">Ambos (50/50)</option>
+          <option value="camilo">Solo Camilo</option>
+          <option value="carlos">Solo Carlos</option>
+        </select>
+      </div>
+    </div>
+    <!-- Split preview -->
+    <div class="split-preview" id="split-preview" style="display:none">
+      <div class="sp-camilo">
+        <div class="sp-label">Camilo paga</div>
+        <div class="sp-value" id="sp-camilo-val">—</div>
+      </div>
+      <div class="sp-carlos">
+        <div class="sp-label">Carlos paga</div>
+        <div class="sp-value" id="sp-carlos-val">—</div>
+      </div>
+      <div>
+        <div class="sp-label">Fee neto c/u</div>
+        <div class="sp-value" id="sp-fee-val" style="color:var(--muted)">—</div>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-primary" onclick="addPurchase()">Registrar compra</button>
+      <button class="btn-secondary" onclick="clearForm()">Limpiar</button>
+      <span class="form-note" id="f-note"></span>
+    </div>
+  </div>
+
+  <!-- History table -->
+  <div class="history-section">
+    <div class="history-header">
+      <h3>Historial de transacciones</h3>
+      <div class="filter-tabs">
+        <button class="filter-btn active" onclick="setFilter('todas',this)">Todas</button>
+        <button class="filter-btn" onclick="setFilter('compra',this)">Compras</button>
+        <button class="filter-btn" onclick="setFilter('dividendo',this)">Dividendos</button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Tipo</th>
+            <th>Acciones</th>
+            <th>Costo Total</th>
+            <th>Fee</th>
+            <th>Camilo</th>
+            <th>Carlos</th>
+            <th>¿Quién?</th>
+            <th>Total Acc.</th>
+          </tr>
+        </thead>
+        <tbody id="history-tbody"></tbody>
+        <tfoot id="history-tfoot"></tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <div class="t-title" id="toast-title"></div>
+  <div id="toast-body"></div>
 </div>
 
 <script>
-const PRICE=609.09, INIT_SHARES=12, GOAL=100000;
+// ══════════════════════════════════════════
+// GIST CONFIG — reemplaza con tus valores
+// ══════════════════════════════════════════
+const GIST_ID    = 'c6cc7c5f432204b51af9a928229a96f4';
+const GIST_TOKEN = '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';
+const GIST_FILE  = 'purchases.json';
 
-function simulate(annualRate,monthlyBuy,maxMonths=180){
-  const mr=Math.pow(1+annualRate/100,1/12)-1;
-  let shares=INIT_SHARES,price=PRICE,invested=INIT_SHARES*PRICE,divAcc=0;
-  const vals=[],invs=[],divs=[];
-  let goalMonth=-1;
-  for(let m=0;m<=maxMonths;m++){
-    const v=shares*price;
-    vals.push(Math.round(v));invs.push(Math.round(invested));divs.push(Math.round(divAcc));
-    if(v>=GOAL&&goalMonth===-1)goalMonth=m;
-    price*=(1+mr);shares+=monthlyBuy;invested+=monthlyBuy*price;
-    divAcc+=v*0.01195/12;
+// ══════════════════════════════════════════
+// DATA — se carga desde el Gist al iniciar
+// ══════════════════════════════════════════
+let purchases = [];
+let nextId = 1;
+let gistSaveInProgress = false;
+
+// ── Cargar desde Gist ──
+async function loadFromGist() {
+  showSyncStatus('loading');
+  try {
+    const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+      headers: {
+        'Authorization': `token ${GIST_TOKEN}`,
+        'Accept': 'application/vnd.github.v3+json'
+      }
+    });
+    if (!res.ok) throw new Error('Error cargando Gist: ' + res.status);
+    const data = await res.json();
+    const content = data.files[GIST_FILE]?.content;
+    if (!content) throw new Error('Archivo no encontrado en el Gist');
+    purchases = JSON.parse(content);
+    purchases.sort((a,b) => new Date(a.date) - new Date(b.date));
+    nextId = purchases.length > 0 ? Math.max(...purchases.map(p=>p.id)) + 1 : 1;
+    showSyncStatus('ok');
+  } catch(e) {
+    console.error(e);
+    showSyncStatus('error', e.message);
   }
-  return{vals,invs,divs,goalMonth,goalShares:goalMonth>0?INIT_SHARES+goalMonth*monthlyBuy:null,goalInvested:goalMonth>0?invs[goalMonth]:null};
 }
 
-function goalDate(months){
-  const d=new Date();d.setMonth(d.getMonth()+months);
+// ── Guardar en Gist ──
+async function saveToGist() {
+  if (gistSaveInProgress) return;
+  gistSaveInProgress = true;
+  showSyncStatus('saving');
+  try {
+    const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `token ${GIST_TOKEN}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        files: { [GIST_FILE]: { content: JSON.stringify(purchases, null, 2) } }
+      })
+    });
+    if (!res.ok) throw new Error('Error guardando: ' + res.status);
+    showSyncStatus('ok');
+  } catch(e) {
+    console.error(e);
+    showSyncStatus('error', e.message);
+  } finally {
+    gistSaveInProgress = false;
+  }
+}
+
+// ── Indicador de sync en la nav ──
+function showSyncStatus(state, msg='') {
+  let el = document.getElementById('sync-indicator');
+  if (!el) return;
+  const states = {
+    loading: { icon:'⟳', text:'Cargando...', color:'var(--muted)' },
+    saving:  { icon:'⟳', text:'Guardando...', color:'var(--amber)' },
+    ok:      { icon:'✓',  text:'Guardado',     color:'var(--accent)' },
+    error:   { icon:'✗',  text:'Error: '+msg,  color:'var(--red)' }
+  };
+  const s = states[state] || states.ok;
+  el.innerHTML = `<span style="color:${s.color};font-size:.8rem;display:flex;align-items:center;gap:.3rem">
+    <span style="${state==='loading'||state==='saving'?'display:inline-block;animation:spin .8s linear infinite':''}">${s.icon}</span>
+    ${s.text}
+  </span>`;
+}
+let activeFilter = 'todas';
+const PRICE = 582.96; // latest close from history
+const USD_COP = 4100;
+
+// ══════════════════════════════════════════
+// TAB SWITCHING
+// ══════════════════════════════════════════
+function switchTab(tab) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + tab).classList.add('active');
+  event.target.classList.add('active');
+  if(tab === 'registro') renderRegistro();
+}
+
+// ══════════════════════════════════════════
+// COMPUTED STATS
+// ══════════════════════════════════════════
+function computeStats() {
+  const buys = purchases.filter(p => p.type === 'compra');
+  const divs = purchases.filter(p => p.type === 'dividendo');
+
+  const totalShares = buys.reduce((s,p) => s + p.shares, 0);
+  const totalCost   = purchases.reduce((s,p) => s + p.cost, 0);
+  const totalDivs   = divs.reduce((s,p) => s + p.cost, 0);
+
+  // per-person shares
+  let camiloShares = 0, carlosShares = 0;
+  buys.forEach(p => {
+    if(p.who === 'camilo') camiloShares += p.shares;
+    else if(p.who === 'carlos') carlosShares += p.shares;
+    else { camiloShares += p.shares/2; carlosShares += p.shares/2; }
+  });
+
+  // per-person invested COP (only compras)
+  const camiloCOP = buys.reduce((s,p) => s + p.camilo, 0);
+  const carlosCOP = buys.reduce((s,p) => s + p.carlos, 0);
+
+  const camiloPct = totalShares > 0 ? camiloShares / totalShares : 0.5;
+  const carlosPct = totalShares > 0 ? carlosShares / totalShares : 0.5;
+
+  return { totalShares, totalCost, totalDivs, camiloShares, carlosShares,
+           camiloCOP, carlosCOP, camiloPct, carlosPct };
+}
+
+// ══════════════════════════════════════════
+// DASHBOARD
+// ══════════════════════════════════════════
+const GOAL = 100000;
+
+function simulate(annualRate, monthlyBuy, maxMonths=180) {
+  const { totalShares } = computeStats();
+  const INIT = totalShares;
+  const mr = Math.pow(1+annualRate/100,1/12)-1;
+  let shares=INIT, price=PRICE, invested=INIT*PRICE;
+  const vals=[], invs=[];
+  let goalMonth=-1;
+  for(let m=0; m<=maxMonths; m++){
+    const v=shares*price;
+    vals.push(Math.round(v)); invs.push(Math.round(invested));
+    if(v>=GOAL && goalMonth===-1) goalMonth=m;
+    price*=(1+mr); shares+=monthlyBuy; invested+=monthlyBuy*price;
+  }
+  return {vals, invs, goalMonth, goalInvested: goalMonth>0 ? invs[goalMonth] : null};
+}
+
+function goalDate(months) {
+  const d = new Date(); d.setMonth(d.getMonth()+months);
   return d.toLocaleDateString('es-CO',{month:'short',year:'numeric'});
 }
 
-const chartColor={text:'#94a3b8',grid:'#1e293b'};
+const chartColor = {text:'#94a3b8', grid:'#1e293b'};
 
-const mainCtx=document.getElementById('mainChart');
-let data=simulate(10.5,1);
-const labels=Array.from({length:181},(_,i)=>i);
+// Init chart refs
+let mainChartRef, compoundChartRef;
 
-const mainChart=new Chart(mainCtx,{
-  type:'line',
-  data:{labels,datasets:[
-    {label:'Valor',data:data.vals,borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.06)',fill:true,tension:.35,pointRadius:0,borderWidth:2},
-    {label:'Invertido',data:data.invs,borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.04)',fill:true,tension:.35,pointRadius:0,borderWidth:1.5,borderDash:[4,3]},
-  ]},
-  options:{
-    responsive:true,maintainAspectRatio:false,
-    interaction:{mode:'index',intersect:false},
-    plugins:{legend:{display:false},tooltip:{
-      backgroundColor:'#1e293b',titleColor:'#e2e8f0',bodyColor:'#94a3b8',borderColor:'#334155',borderWidth:1,
-      padding:12,cornerRadius:8,
-      callbacks:{title:i=>'Mes '+i[0].label+' (Año '+(i[0].parsed.x/12).toFixed(1)+')',label:i=>i.dataset.label+': $'+Number(i.raw).toLocaleString()}
-    }},
-    scales:{
-      x:{grid:{color:chartColor.grid,lineWidth:.5},ticks:{color:chartColor.text,font:{size:11},stepSize:12,callback:v=>v%12===0?'Año '+(v/12):''}},
-      y:{grid:{color:chartColor.grid,lineWidth:.5},ticks:{color:chartColor.text,font:{size:11},callback:v=>'$'+(v/1000).toFixed(0)+'K'},suggestedMax:200000}
-    }
-  },
-  plugins:[{afterDraw(ch){
-    const y=ch.scales.y.getPixelForValue(GOAL),x=ch.scales.x;
-    const c=ch.ctx;c.save();c.strokeStyle='#ef4444';c.lineWidth=1;c.setLineDash([6,4]);
-    c.beginPath();c.moveTo(x.left,y);c.lineTo(x.right,y);c.stroke();
-    c.fillStyle='#ef4444';c.font='600 11px "DM Sans"';c.fillText('Meta $100K',x.right-78,y-8);c.restore();
-  }}]
-});
+function initDashboard() {
+  const { totalShares } = computeStats();
+  const portfolioUSD = totalShares * PRICE;
+  const pct = Math.min((portfolioUSD/GOAL)*100, 100).toFixed(1);
 
-const scenarios=[
-  {rate:8,label:'Conservador',color:'var(--muted)'},
-  {rate:10.5,label:'Esperado',color:'var(--accent)',active:true},
-  {rate:12,label:'Optimista',color:'var(--blue2)'},
-  {rate:14.6,label:'Histórico 10Y',color:'var(--purple)'}
+  document.getElementById('m-value').textContent = '$' + Math.round(portfolioUSD).toLocaleString();
+  document.getElementById('m-shares-label').textContent = totalShares + ' acciones VOO';
+  document.getElementById('m-price').textContent = '$' + PRICE.toFixed(0);
+  document.getElementById('m-price-cop').textContent = '~COP ' + Math.round(PRICE*USD_COP/1000)+'K';
+  document.getElementById('prog-fill').style.width = pct+'%';
+  document.getElementById('prog-fill').textContent = pct+'%';
+
+  const d = simulate(10.5, 1);
+  const gain = d.goalMonth > 0 ? GOAL - d.goalInvested : null;
+  document.getElementById('m-time').textContent = d.goalMonth>0 ? (d.goalMonth/12).toFixed(1)+' años' : '>15 años';
+  document.getElementById('m-date').textContent = d.goalMonth>0 ? goalDate(d.goalMonth) : '—';
+  document.getElementById('m-gain').textContent = gain ? '$'+Math.round(gain).toLocaleString() : '—';
+
+  const labels = Array.from({length:181},(_,i)=>i);
+
+  // Main chart
+  const mainCtx = document.getElementById('mainChart');
+  mainChartRef = new Chart(mainCtx, {
+    type:'line',
+    data:{labels, datasets:[
+      {label:'Valor',data:d.vals,borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.06)',fill:true,tension:.35,pointRadius:0,borderWidth:2},
+      {label:'Invertido',data:d.invs,borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.04)',fill:true,tension:.35,pointRadius:0,borderWidth:1.5,borderDash:[4,3]},
+    ]},
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false},tooltip:{
+        backgroundColor:'#1e293b',titleColor:'#e2e8f0',bodyColor:'#94a3b8',borderColor:'#334155',borderWidth:1,padding:12,cornerRadius:8,
+        callbacks:{title:i=>'Mes '+i[0].label+' (Año '+(i[0].parsed.x/12).toFixed(1)+')',label:i=>i.dataset.label+': $'+Number(i.raw).toLocaleString()}
+      }},
+      scales:{
+        x:{grid:{color:chartColor.grid,lineWidth:.5},ticks:{color:chartColor.text,font:{size:11},stepSize:12,callback:v=>v%12===0?'Año '+(v/12):''}},
+        y:{grid:{color:chartColor.grid,lineWidth:.5},ticks:{color:chartColor.text,font:{size:11},callback:v=>'$'+(v/1000).toFixed(0)+'K'},suggestedMax:200000}
+      }
+    },
+    plugins:[{afterDraw(ch){
+      const y=ch.scales.y.getPixelForValue(GOAL),x=ch.scales.x;
+      const c=ch.ctx; c.save(); c.strokeStyle='#ef4444'; c.lineWidth=1; c.setLineDash([6,4]);
+      c.beginPath(); c.moveTo(x.left,y); c.lineTo(x.right,y); c.stroke();
+      c.fillStyle='#ef4444'; c.font='600 11px "DM Sans"'; c.fillText('Meta $100K',x.right-78,y-8); c.restore();
+    }}]
+  });
+
+  // Compound chart
+  function buildCompound(buy) {
+    const months = Array.from({length:181},(_,i)=>i);
+    const { totalShares:ts } = computeStats();
+    const noGrowth = months.map(m=>(ts+m*buy)*PRICE);
+    const s8=simulate(8,buy).vals, s10=simulate(10.5,buy).vals, s14=simulate(14.6,buy).vals;
+    return {noGrowth,s8,s10,s14,labels:months};
+  }
+
+  let cd = buildCompound(1);
+  const cCtx = document.getElementById('compoundChart');
+  compoundChartRef = new Chart(cCtx, {
+    type:'line',
+    data:{labels:cd.labels, datasets:[
+      {label:'Sin rendimiento',data:cd.noGrowth,borderColor:'#475569',borderWidth:1.5,borderDash:[4,3],pointRadius:0,tension:.3,fill:false},
+      {label:'8% anual',data:cd.s8,borderColor:'#64748b',borderWidth:1.5,pointRadius:0,tension:.3,fill:false},
+      {label:'10.5% anual',data:cd.s10,borderColor:'#10b981',borderWidth:2.5,pointRadius:0,tension:.3,fill:false},
+      {label:'14.6% anual',data:cd.s14,borderColor:'#a78bfa',borderWidth:1.5,pointRadius:0,tension:.3,fill:false},
+    ]},
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:true,position:'top',labels:{color:chartColor.text,font:{family:'DM Sans',size:11},boxWidth:12,boxHeight:3,padding:16}},
+        tooltip:{backgroundColor:'#1e293b',titleColor:'#e2e8f0',bodyColor:'#94a3b8',borderColor:'#334155',borderWidth:1,padding:12,cornerRadius:8,
+          callbacks:{title:i=>'Mes '+i[0].label,label:i=>i.dataset.label+': $'+Number(i.raw).toLocaleString()}}},
+      scales:{
+        x:{grid:{color:chartColor.grid,lineWidth:.5},ticks:{color:chartColor.text,font:{size:11},stepSize:12,callback:v=>v%12===0?'Año '+(v/12):''}},
+        y:{grid:{color:chartColor.grid,lineWidth:.5},ticks:{color:chartColor.text,font:{size:11},callback:v=>'$'+(v/1000).toFixed(0)+'K'}}
+      }
+    },
+    plugins:[{afterDraw(ch){
+      const y=ch.scales.y.getPixelForValue(GOAL),x=ch.scales.x;
+      const c=ch.ctx; c.save(); c.strokeStyle='rgba(239,68,68,0.4)'; c.lineWidth=1; c.setLineDash([4,4]);
+      c.beginPath(); c.moveTo(x.left,y); c.lineTo(x.right,y); c.stroke(); c.restore();
+    }}]
+  });
+
+  renderScenarios(1);
+  renderMilestones(10.5, 1);
+
+  // Sliders
+  document.getElementById('rateSlider').addEventListener('input', updateDashboard);
+  document.getElementById('buySlider').addEventListener('input', updateDashboard);
+
+  function updateDashboard() {
+    const rate = parseFloat(document.getElementById('rateSlider').value);
+    const buy = parseInt(document.getElementById('buySlider').value);
+    document.getElementById('rateVal').textContent = rate.toFixed(1)+'%';
+    document.getElementById('buyVal').textContent = buy;
+    const nd = simulate(rate, buy);
+    mainChartRef.data.datasets[0].data = nd.vals;
+    mainChartRef.data.datasets[1].data = nd.invs;
+    mainChartRef.update('none');
+    document.getElementById('m-time').textContent = nd.goalMonth>0 ? (nd.goalMonth/12).toFixed(1)+' años' : '>15 años';
+    document.getElementById('m-date').textContent = nd.goalMonth>0 ? goalDate(nd.goalMonth) : '—';
+    const g = nd.goalMonth>0 ? GOAL-nd.goalInvested : null;
+    document.getElementById('m-gain').textContent = g ? '$'+Math.round(g).toLocaleString() : '—';
+    renderScenarios(buy);
+    renderMilestones(rate, buy);
+    const nc = buildCompound(buy);
+    compoundChartRef.data.datasets[0].data = nc.noGrowth;
+    compoundChartRef.data.datasets[1].data = nc.s8;
+    compoundChartRef.data.datasets[2].data = nc.s10;
+    compoundChartRef.data.datasets[3].data = nc.s14;
+    compoundChartRef.update('none');
+  }
+}
+
+const scenarios = [
+  {rate:8,  label:'Conservador', active:false},
+  {rate:10.5,label:'Esperado',   active:true},
+  {rate:12,  label:'Optimista',  active:false},
+  {rate:14.6,label:'Histórico 10Y', active:false}
 ];
 
-function renderScenarios(monthlyBuy){
-  const grid=document.getElementById('scenarioGrid');grid.innerHTML='';
-  scenarios.forEach(s=>{
-    const d=simulate(s.rate,monthlyBuy);
-    const div=document.createElement('div');div.className='scenario'+(s.active?' active':'');
-    div.innerHTML=`<div class="s-rate">${s.rate}%</div><div class="s-label">${s.label}</div><div class="s-time">${d.goalMonth>0?(d.goalMonth/12).toFixed(1)+' años':'>15 años'}</div><div class="s-date">${d.goalMonth>0?goalDate(d.goalMonth):'—'}</div>`;
+function renderScenarios(monthlyBuy) {
+  const grid = document.getElementById('scenarioGrid'); grid.innerHTML='';
+  scenarios.forEach(s => {
+    const d = simulate(s.rate, monthlyBuy);
+    const div = document.createElement('div');
+    div.className = 'scenario' + (s.active?' active':'');
+    div.innerHTML = `<div class="s-rate">${s.rate}%</div><div class="s-label">${s.label}</div><div class="s-time">${d.goalMonth>0?(d.goalMonth/12).toFixed(1)+' años':'>15 años'}</div><div class="s-date">${d.goalMonth>0?goalDate(d.goalMonth):'—'}</div>`;
     grid.appendChild(div);
   });
 }
 
-function renderMilestones(annualRate,monthlyBuy){
-  const d=simulate(annualRate,monthlyBuy);
-  const ms=[
-    {val:7309,label:'Hoy',reached:true},
-    {val:10000,label:'$10K'},
-    {val:25000,label:'$25K'},
-    {val:50000,label:'$50K'},
-    {val:75000,label:'$75K'},
-    {val:100000,label:'$100K',goal:true}
+function renderMilestones(annualRate, monthlyBuy) {
+  const { totalShares } = computeStats();
+  const currentVal = totalShares * PRICE;
+  const d = simulate(annualRate, monthlyBuy);
+  const ms = [
+    {val:currentVal, label:'Hoy', reached:true},
+    {val:10000,  label:'$10K'},
+    {val:25000,  label:'$25K'},
+    {val:50000,  label:'$50K'},
+    {val:75000,  label:'$75K'},
+    {val:100000, label:'$100K', goal:true}
   ];
-  const dots=document.getElementById('milestoneDots');dots.innerHTML='';
-  ms.forEach(m=>{
-    const month=d.vals.findIndex(v=>v>=m.val);
-    const el=document.createElement('div');
-    el.className='milestone-dot'+(m.reached?' reached':'')+(m.goal?' goal':'');
-    el.innerHTML=`<div class="dot-circle">${m.reached?'✓':month>0?Math.round(month/12)+'a':'?'}</div><div class="dot-value">${m.label}</div><div class="dot-label">${m.reached?'Mar 2026':month>0?goalDate(month):'—'}</div>`;
+  const dots = document.getElementById('milestoneDots'); dots.innerHTML='';
+  ms.forEach(m => {
+    const month = d.vals.findIndex(v=>v>=m.val);
+    const el = document.createElement('div');
+    el.className = 'milestone-dot'+(m.reached?' reached':'')+(m.goal?' goal':'');
+    el.innerHTML = `<div class="dot-circle">${m.reached?'✓':month>0?Math.round(month/12)+'a':'?'}</div><div class="dot-value">${m.label}</div><div class="dot-label">${m.reached?'Mar 2026':month>0?goalDate(month):'—'}</div>`;
     dots.appendChild(el);
   });
 }
 
-const compoundCtx=document.getElementById('compoundChart');
-function buildCompound(monthlyBuy){
-  const months=Array.from({length:181},(_,i)=>i);
-  const noGrowth=months.map(m=>(INIT_SHARES+m*monthlyBuy)*PRICE);
-  const s8=simulate(8,monthlyBuy).vals;
-  const s10=simulate(10.5,monthlyBuy).vals;
-  const s14=simulate(14.6,monthlyBuy).vals;
-  return{noGrowth,s8,s10,s14,labels:months};
+// ══════════════════════════════════════════
+// REGISTRO TAB
+// ══════════════════════════════════════════
+function renderRegistro() {
+  const s = computeStats();
+
+  // Summary cards
+  document.getElementById('rc-shares').textContent = s.totalShares.toFixed(1);
+  const totalUSD = s.totalShares * PRICE;
+  document.getElementById('rc-total').textContent = '$' + totalUSD.toLocaleString('es-CO',{maximumFractionDigits:0});
+  document.getElementById('rc-total-cop').textContent = 'COP ' + s.totalCost.toLocaleString('es-CO');
+  document.getElementById('rc-camilo-shares').textContent = s.camiloShares.toFixed(1);
+  document.getElementById('rc-camilo-cop').textContent = 'COP ' + Math.round(s.camiloCOP).toLocaleString('es-CO');
+  document.getElementById('rc-carlos-shares').textContent = s.carlosShares.toFixed(1);
+  document.getElementById('rc-carlos-cop').textContent = 'COP ' + Math.round(s.carlosCOP).toLocaleString('es-CO');
+  document.getElementById('rc-divs').textContent = 'COP ' + Math.round(s.totalDivs).toLocaleString('es-CO');
+
+  // Ownership bar
+  const cp = (s.camiloPct*100).toFixed(1), crp = (s.carlosPct*100).toFixed(1);
+  document.getElementById('own-bar-camilo').style.width = cp+'%';
+  document.getElementById('own-bar-carlos').style.width = crp+'%';
+  document.getElementById('own-legend-camilo').textContent = `Camilo — ${cp}% (${s.camiloShares.toFixed(1)} acc)`;
+  document.getElementById('own-legend-carlos').textContent = `Carlos — ${crp}% (${s.carlosShares.toFixed(1)} acc)`;
+
+  // Table
+  renderTable();
 }
-let compData=buildCompound(1);
-const compoundChart=new Chart(compoundCtx,{
-  type:'line',
-  data:{labels:compData.labels,datasets:[
-    {label:'Sin rendimiento',data:compData.noGrowth,borderColor:'#475569',borderWidth:1.5,borderDash:[4,3],pointRadius:0,tension:.3,fill:false},
-    {label:'8% anual',data:compData.s8,borderColor:'#64748b',borderWidth:1.5,pointRadius:0,tension:.3,fill:false},
-    {label:'10.5% anual',data:compData.s10,borderColor:'#10b981',borderWidth:2.5,pointRadius:0,tension:.3,fill:false},
-    {label:'14.6% anual',data:compData.s14,borderColor:'#a78bfa',borderWidth:1.5,pointRadius:0,tension:.3,fill:false},
-  ]},
-  options:{
-    responsive:true,maintainAspectRatio:false,
-    interaction:{mode:'index',intersect:false},
-    plugins:{legend:{display:true,position:'top',labels:{color:chartColor.text,font:{family:'DM Sans',size:11},boxWidth:12,boxHeight:3,padding:16}},
-    tooltip:{backgroundColor:'#1e293b',titleColor:'#e2e8f0',bodyColor:'#94a3b8',borderColor:'#334155',borderWidth:1,padding:12,cornerRadius:8,
-      callbacks:{title:i=>'Mes '+i[0].label,label:i=>i.dataset.label+': $'+Number(i.raw).toLocaleString()}}},
-    scales:{
-      x:{grid:{color:chartColor.grid,lineWidth:.5},ticks:{color:chartColor.text,font:{size:11},stepSize:12,callback:v=>v%12===0?'Año '+(v/12):''}},
-      y:{grid:{color:chartColor.grid,lineWidth:.5},ticks:{color:chartColor.text,font:{size:11},callback:v=>'$'+(v/1000).toFixed(0)+'K'}}
-    }
-  },
-  plugins:[{afterDraw(ch){
-    const y=ch.scales.y.getPixelForValue(GOAL),x=ch.scales.x;
-    const c=ch.ctx;c.save();c.strokeStyle='rgba(239,68,68,0.4)';c.lineWidth=1;c.setLineDash([4,4]);
-    c.beginPath();c.moveTo(x.left,y);c.lineTo(x.right,y);c.stroke();c.restore();
-  }}]
+
+function renderTable() {
+  const tbody = document.getElementById('history-tbody');
+  const tfoot = document.getElementById('history-tfoot');
+  const filtered = activeFilter==='todas' ? purchases : purchases.filter(p=>p.type===activeFilter);
+  const sorted = [...filtered].sort((a,b)=>new Date(b.date)-new Date(a.date));
+
+  if(sorted.length===0){
+    tbody.innerHTML=`<tr><td colspan="9"><div class="empty-state"><div class="e-icon">📭</div>No hay transacciones registradas</div></td></tr>`;
+    tfoot.innerHTML='';
+    return;
+  }
+
+  // Running share total for display (sorted asc for running total)
+  const allSorted = [...purchases].sort((a,b)=>new Date(a.date)-new Date(b.date));
+  const runningMap = {};
+  let running=0;
+  allSorted.forEach(p=>{ running+=p.shares; runningMap[p.id]=running; });
+
+  tbody.innerHTML = sorted.map(p => {
+    const d = new Date(p.date+'T00:00:00');
+    const dateStr = d.toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric'});
+    const badge = p.who==='ambos' ? '<span class="badge-ambos">Ambos</span>' :
+                  p.who==='camilo' ? '<span class="badge-camilo">Camilo</span>' :
+                  '<span class="badge-carlos">Carlos</span>';
+    const typeEl = `<span class="td-type ${p.type}">${p.type==='compra'?'Compra':p.type==='dividendo'?'Dividendo':'Split'}</span>`;
+    const sharesEl = p.shares>0 ? `<span class="td-shares">${p.shares}</span>` : `<span class="td-muted" style="color:var(--muted)">—</span>`;
+    return `<tr>
+      <td class="td-date">${dateStr}</td>
+      <td>${typeEl}</td>
+      <td>${sharesEl}</td>
+      <td>COP ${p.cost.toLocaleString('es-CO')}</td>
+      <td class="td-cop">${p.fee>0?'COP '+p.fee.toLocaleString('es-CO'):'—'}</td>
+      <td class="td-camilo">${p.camilo>0?'COP '+Math.round(p.camilo).toLocaleString('es-CO'):'—'}</td>
+      <td class="td-carlos">${p.carlos>0?'COP '+Math.round(p.carlos).toLocaleString('es-CO'):'—'}</td>
+      <td>${badge}</td>
+      <td style="color:var(--accent2);font-weight:600">${runningMap[p.id].toFixed(1)}</td>
+    </tr>`;
+  }).join('');
+
+  // Footer totals
+  const totCost = filtered.reduce((s,p)=>s+p.cost,0);
+  const totFee  = filtered.reduce((s,p)=>s+p.fee,0);
+  const totCamilo = filtered.reduce((s,p)=>s+p.camilo,0);
+  const totCarlos = filtered.reduce((s,p)=>s+p.carlos,0);
+  const totShares = filtered.filter(p=>p.type==='compra').reduce((s,p)=>s+p.shares,0);
+  tfoot.innerHTML = `<tr class="tfoot-row">
+    <td colspan="2" style="color:var(--muted);font-size:.8rem">Totales (${filtered.length} transacciones)</td>
+    <td style="color:var(--accent2)">${totShares}</td>
+    <td>COP ${totCost.toLocaleString('es-CO')}</td>
+    <td class="td-cop">COP ${totFee.toLocaleString('es-CO')}</td>
+    <td class="td-camilo">COP ${Math.round(totCamilo).toLocaleString('es-CO')}</td>
+    <td class="td-carlos">COP ${Math.round(totCarlos).toLocaleString('es-CO')}</td>
+    <td></td>
+    <td style="color:var(--accent2)">${computeStats().totalShares.toFixed(1)}</td>
+  </tr>`;
+}
+
+function setFilter(filter, btn) {
+  activeFilter = filter;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTable();
+}
+
+// ── Form live preview ──
+['f-cost','f-fee','f-who','f-shares'].forEach(id=>{
+  const el = document.getElementById(id);
+  if(el) el.addEventListener('input', updateSplitPreview);
 });
 
-function update(){
-  const rate=parseFloat(document.getElementById('rateSlider').value);
-  const buy=parseInt(document.getElementById('buySlider').value);
-  document.getElementById('rateVal').textContent=rate.toFixed(1)+'%';
-  document.getElementById('buyVal').textContent=buy;
+function updateSplitPreview() {
+  const cost = parseFloat(document.getElementById('f-cost').value)||0;
+  const fee  = parseFloat(document.getElementById('f-fee').value)||0;
+  const who  = document.getElementById('f-who').value;
+  const preview = document.getElementById('split-preview');
 
-  const d=simulate(rate,buy);
-  mainChart.data.datasets[0].data=d.vals;
-  mainChart.data.datasets[1].data=d.invs;
-  mainChart.update('none');
+  if(!cost){ preview.style.display='none'; return; }
+  preview.style.display='grid';
 
-  const gm=d.goalMonth;
-  document.getElementById('m-time').textContent=gm>0?(gm/12).toFixed(1)+' años':'>15 años';
-  document.getElementById('m-date').textContent=gm>0?goalDate(gm):'—';
-  document.getElementById('m-gain').textContent=gm>0?'$'+Math.round(GOAL-d.goalInvested).toLocaleString():'—';
+  const net = cost - fee;
+  let camiloPays=0, carlosPays=0, feeEach=0;
+  if(who==='ambos'){ feeEach=fee/2; camiloPays=net/2+feeEach; carlosPays=net/2+feeEach; }
+  else if(who==='camilo'){ camiloPays=cost; carlosPays=0; feeEach=fee; }
+  else { carlosPays=cost; camiloPays=0; feeEach=fee; }
 
-  renderScenarios(buy);
-  renderMilestones(rate,buy);
-
-  const cd=buildCompound(buy);
-  compoundChart.data.datasets[0].data=cd.noGrowth;
-  compoundChart.data.datasets[1].data=cd.s8;
-  compoundChart.data.datasets[2].data=cd.s10;
-  compoundChart.data.datasets[3].data=cd.s14;
-  compoundChart.update('none');
+  const fmt = v => v>0 ? 'COP '+Math.round(v).toLocaleString('es-CO') : '—';
+  document.getElementById('sp-camilo-val').textContent = fmt(camiloPays);
+  document.getElementById('sp-carlos-val').textContent = fmt(carlosPays);
+  document.getElementById('sp-fee-val').textContent = who==='ambos' ? fmt(feeEach) : fmt(feeEach);
 }
 
-document.getElementById('rateSlider').addEventListener('input',update);
-document.getElementById('buySlider').addEventListener('input',update);
+// ── Add purchase ──
+function addPurchase() {
+  const date   = document.getElementById('f-date').value;
+  const type   = document.getElementById('f-type').value;
+  const shares = parseFloat(document.getElementById('f-shares').value)||0;
+  const cost   = parseFloat(document.getElementById('f-cost').value)||0;
+  const fee    = parseFloat(document.getElementById('f-fee').value)||0;
+  const who    = document.getElementById('f-who').value;
+  const note   = document.getElementById('f-note');
 
-renderScenarios(1);
-renderMilestones(10.5,1);
+  if(!date){ note.textContent='⚠ Ingresa la fecha'; note.style.color='var(--red)'; return; }
+  if(!cost){ note.textContent='⚠ Ingresa el costo'; note.style.color='var(--red)'; return; }
+
+  const net = cost - fee;
+  let camilo=0, carlos=0;
+  if(who==='ambos')  { camilo=net/2+fee/2; carlos=net/2+fee/2; }
+  else if(who==='camilo') { camilo=cost; carlos=0; }
+  else { carlos=cost; camilo=0; }
+
+  const p = { id:nextId++, date, type, shares, cost, fee, camilo, carlos, who };
+  purchases.push(p);
+  purchases.sort((a,b)=>new Date(a.date)-new Date(b.date));
+
+  showToast(
+    type==='compra' ? '✅ Compra registrada' : '💰 Dividendo registrado',
+    `${shares>0?shares+' acción(es) — ':''} COP ${cost.toLocaleString('es-CO')}`
+  );
+
+  clearForm();
+  renderRegistro();
+  refreshDashboard();
+}
+
+function clearForm() {
+  ['f-date','f-shares','f-cost'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  document.getElementById('f-fee').value = '14875';
+  document.getElementById('f-who').value = 'ambos';
+  document.getElementById('f-type').value = 'compra';
+  document.getElementById('split-preview').style.display='none';
+  const note=document.getElementById('f-note'); note.textContent=''; 
+}
+
+function refreshDashboard() {
+  // Update live metrics on dashboard
+  const { totalShares } = computeStats();
+  const portfolioUSD = totalShares * PRICE;
+  const pct = Math.min((portfolioUSD/GOAL)*100, 100).toFixed(1);
+  const el = document.getElementById('m-value');
+  if(el) el.textContent = '$' + Math.round(portfolioUSD).toLocaleString();
+  const ps = document.getElementById('m-shares-label');
+  if(ps) ps.textContent = totalShares + ' acciones VOO';
+  const pf = document.getElementById('prog-fill');
+  if(pf){ pf.style.width=pct+'%'; pf.textContent=pct+'%'; }
+}
+
+// ── Toast ──
+function showToast(title, body) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-title').textContent = title;
+  document.getElementById('toast-body').textContent = body;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 3500);
+}
+
+// ══════════════════════════════════════════
+// BOOT — carga Gist e inicializa
+// ══════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', async () => {
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('f-date').value = today;
+
+  await loadFromGist();
+  initDashboard();
+});
 </script>
 </body>
 </html>
