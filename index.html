@@ -536,9 +536,10 @@ async function loadFromGist() {
     });
     if (!res.ok) throw new Error('Error cargando Gist: ' + res.status);
     const data = await res.json();
-    const content = data.files[GIST_FILE]?.content;
-    if (!content) throw new Error('Archivo no encontrado en el Gist');
-    purchases = JSON.parse(content);
+    // Toma el primer archivo sin importar el nombre
+    const firstFile = Object.values(data.files)[0];
+    if (!firstFile) throw new Error('Gist vacío');
+    purchases = JSON.parse(firstFile.content);
     purchases.sort((a,b) => new Date(a.date) - new Date(b.date));
     nextId = purchases.length > 0 ? Math.max(...purchases.map(p=>p.id)) + 1 : 1;
     showSyncStatus('ok');
@@ -554,6 +555,13 @@ async function saveToGist() {
   gistSaveInProgress = true;
   showSyncStatus('saving');
   try {
+    // Primero obtenemos el nombre real del archivo
+    const getRes = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+      headers: { 'Authorization': `token ${GIST_TOKEN}`, 'Accept': 'application/vnd.github.v3+json' }
+    });
+    const getData = await getRes.json();
+    const realFileName = Object.keys(getData.files)[0];
+
     const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
       method: 'PATCH',
       headers: {
@@ -562,7 +570,7 @@ async function saveToGist() {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        files: { [GIST_FILE]: { content: JSON.stringify(purchases, null, 2) } }
+        files: { [realFileName]: { content: JSON.stringify(purchases, null, 2) } }
       })
     });
     if (!res.ok) throw new Error('Error guardando: ' + res.status);
