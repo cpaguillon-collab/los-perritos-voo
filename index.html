@@ -981,6 +981,9 @@ function addPurchase() {
   clearForm();
   renderRegistro();
   refreshDashboard();
+
+  // Persistir en Gist para que sobreviva al recargar
+  saveToGist();
 }
 
 function clearForm() {
