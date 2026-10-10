@@ -63,7 +63,7 @@ function renderLive(){
 computeStats = function(){
   const buys = purchases.filter(p=>p.type==='compra');
   const divs = purchases.filter(p=>p.type==='dividendo');
-  const totalShares = buys.reduce((s,p)=>s+p.shares,0) + divs.reduce((s,p)=>s+(p.shares||0),0);
+  const totalShares = buys.reduce((s,p)=>s+p.shares,0); // solo compras: los dividendos no suman acciones
   const totalCost = buys.reduce((s,p)=>s+p.cost,0);
   const totalDivs = divs.reduce((s,p)=>s+p.cost,0);
   let camiloShares=0, carlosShares=0;
