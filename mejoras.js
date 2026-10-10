@@ -52,7 +52,7 @@ function renderLive(){
   refreshDashboard();
   const slider = $('rateSlider'); if(slider) slider.dispatchEvent(new Event('input')); // recalcula gráficas/escenarios
   if($('m-price')) $('m-price').textContent = '$' + PRICE.toFixed(2);
-  if($('m-price-cop')) $('m-price-cop').textContent = '~COP ' + Math.round(PRICE*USD_COP/1000).toLocaleString('es-CO') + 'K · TRM ' + Math.round(USD_COP);
+  if($('m-price-cop')) $('m-price-cop').textContent = 'por acción · USD';
   const when = marketTime ? new Date(marketTime).toLocaleString('es-CO',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}) : '—';
   const f = document.querySelector('.footer-insight');
   if(f) f.innerHTML = 'Precio VOO: <b>$'+PRICE.toFixed(2)+'</b> ('+priceSource+', cierre/último dato '+when+'; puede tener ~15 min de retraso). Rendimiento pasado no garantiza resultados futuros.';
@@ -233,4 +233,81 @@ initDashboard = function(){
 // al registrar una compra: recalcular meta y rendimiento
 const _refresh = refreshDashboard;
 refreshDashboard = function(){ _refresh(); if(typeof renderGoalPanel==='function' && $('rateSlider')){ renderGoalPanel(); renderPerformance(); } };
+
+/* ───────── 6. Todo en USD ───────── */
+const usdCost = p => p.shares>0 ? p.shares*(closeAt(p.date) ?? (p.cost/USD_COP/p.shares)) + (p.fee||0)/USD_COP : p.cost/USD_COP;
+const D2 = v => '$' + v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+function usdStats(){
+  const buys = purchases.filter(p=>p.type==='compra'), divs = purchases.filter(p=>p.type==='dividendo');
+  const s = computeStats(); let cam=0, car=0;
+  buys.forEach(p=>{ const c=usdCost(p); if(p.who==='camilo') cam+=c; else if(p.who==='carlos') car+=c; else {cam+=c/2; car+=c/2;} });
+  return {s, buys, divs, inv:buys.reduce((a,p)=>a+usdCost(p),0), fees:buys.reduce((a,p)=>a+(p.fee||0)/USD_COP,0),
+          divUSD:divs.reduce((a,p)=>a+p.cost/USD_COP,0), cam, car, val:s.totalShares*PRICE};
+}
+renderRegistro = function(){
+  const u=usdStats(), s=u.s;
+  $('rc-shares').textContent = s.totalShares.toFixed(1);
+  $('rc-total').textContent = D2(u.inv);
+  $('rc-total-cop').textContent = 'USD · valor hoy ' + D2(u.val);
+  $('rc-camilo-shares').textContent = s.camiloShares.toFixed(1);
+  $('rc-camilo-cop').textContent = D2(u.cam) + ' USD aportados';
+  $('rc-carlos-shares').textContent = s.carlosShares.toFixed(1);
+  $('rc-carlos-cop').textContent = D2(u.car) + ' USD aportados';
+  $('rc-divs').textContent = D2(u.divUSD);
+  document.querySelectorAll('.reg-card .rc-sub').forEach(e=>{ if(e.textContent==='COP recibidos') e.textContent='USD recibidos'; });
+  const cp=(s.camiloPct*100).toFixed(1), crp=(s.carlosPct*100).toFixed(1);
+  $('own-bar-camilo').style.width=cp+'%'; $('own-bar-carlos').style.width=crp+'%';
+  $('own-legend-camilo').textContent=`Camilo — ${cp}% (${s.camiloShares.toFixed(1)} acc · ${D2(s.camiloShares*PRICE)})`;
+  $('own-legend-carlos').textContent=`Carlos — ${crp}% (${s.carlosShares.toFixed(1)} acc · ${D2(s.carlosShares*PRICE)})`;
+  renderTable();
+};
+renderPerformance = function(){
+  injectTab();
+  const u=usdStats(), s=u.s, buys=u.buys.slice().sort((a,b)=>a.date.localeCompare(b.date));
+  if(!buys.length || !$('perf-cards')) return;
+  const gain=u.val+u.divUSD-u.inv, ret=gain/u.inv, avg=u.inv/s.totalShares;
+  const days=Math.max((Date.now()-new Date(buys[0].date+'T00:00:00'))/864e5,1);
+  const flows=buys.map(p=>({d:new Date(p.date+'T00:00:00'),a:-usdCost(p)}))
+    .concat(u.divs.map(p=>({d:new Date(p.date+'T00:00:00'),a:p.cost/USD_COP}))).sort((a,b)=>a.d-b.d);
+  flows.push({d:new Date(),a:u.val});
+  const irr=days>=365?xirr(flows):null, col=v=>v>=0?'var(--accent)':'var(--red)';
+  $('perf-sub').textContent=`Todo en USD · desde ${new Date(buys[0].date+'T00:00:00').toLocaleDateString('es-CO',{day:'2-digit',month:'long',year:'numeric'})} · ${buys.length} compras · ${Math.round(days)} días · VOO ${D2(PRICE)}`;
+  const card=(l,v,sub,c)=>`<div class="reg-card"><div class="rc-label">${l}</div><div class="rc-value" style="${c?'color:'+c:''}">${v}</div><div class="rc-sub">${sub}</div></div>`;
+  $('perf-cards').innerHTML =
+    card('Invertido', D2(u.inv), 'incluye '+D2(u.fees)+' en comisiones') +
+    card('Valor hoy', D2(u.val), s.totalShares.toFixed(1)+' acciones') +
+    card('Ganancia', (gain>=0?'+':'')+D2(gain), pct(ret)+' sobre lo invertido', col(gain)) +
+    card('Retorno anualizado', irr!=null?pct(irr):'—', irr!=null?'XIRR en USD':'se calcula al cumplir 1 año') +
+    card('Costo promedio', D2(avg), 'por acción') +
+    card('Precio de equilibrio', D2(avg), 'VOO debe superarlo para ganar') +
+    card('Dividendos', D2(u.divUSD), 'recibidos') +
+    card('Comisiones', (u.fees/u.inv*100).toFixed(2)+'%', D2(u.fees/buys.length)+' por compra');
+  if(hist.length){
+    const start=new Date(buys[0].date+'T00:00:00'), labels=[], v=[], c=[];
+    for(let d=new Date(start.getFullYear(),start.getMonth(),1); d<=new Date(); d.setMonth(d.getMonth()+1)){
+      const end=new Date(d.getFullYear(),d.getMonth()+1,0), cap=end>new Date()?new Date():end, iso=cap.toISOString().slice(0,10);
+      const held=buys.filter(p=>p.date<=iso), px=closeAt(iso)??PRICE;
+      labels.push(cap.toLocaleDateString('es-CO',{month:'short',year:'2-digit'}));
+      v.push(Math.round(held.reduce((a,p)=>a+p.shares,0)*px)); c.push(Math.round(held.reduce((a,p)=>a+usdCost(p),0)));
+    }
+    v[v.length-1]=Math.round(u.val);
+    if(perfChart) perfChart.destroy();
+    perfChart=new Chart($('perfChart'),{type:'line',data:{labels,datasets:[
+      {label:'Valor (USD)',data:v,borderColor:'#10b981',backgroundColor:'rgba(16,185,129,.08)',fill:true,tension:.3,borderWidth:2,pointRadius:2},
+      {label:'Invertido (USD)',data:c,borderColor:'#3b82f6',borderDash:[4,3],tension:.3,borderWidth:1.5,pointRadius:0}]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#94a3b8'}}},
+        scales:{x:{ticks:{color:'#94a3b8'},grid:{color:'#1e293b'}},y:{ticks:{color:'#94a3b8',callback:x=>'$'+x.toLocaleString()},grid:{color:'#1e293b'}}}}});
+  }
+  const P=(n,sh,inv,colr)=>{const v=sh*PRICE; return `<div style="flex:1;min-width:200px"><div style="color:${colr};font-weight:600;margin-bottom:.3rem">${n}</div>
+    <div style="font-size:.85rem;color:var(--muted)">${sh.toFixed(1)} acciones · aportó ${D2(inv)}</div>
+    <div style="font-family:var(--font-display);font-size:1.3rem">${D2(v)} <span style="font-size:.9rem;color:${col(v-inv)}">${inv>0?pct((v-inv)/inv):''}</span></div></div>`;};
+  $('perf-people').innerHTML=`<h3>Rendimiento por perrito (USD)</h3><div style="display:flex;gap:2rem;flex-wrap:wrap">${P('Camilo',s.camiloShares,u.cam,'var(--camilo)')}${P('Carlos',s.carlosShares,u.car,'var(--carlos)')}</div>`;
+  const notes=[
+    `Llevan <b>${s.totalShares.toFixed(1)} acciones</b> con un retorno de <b style="color:${col(ret)}">${pct(ret)}</b> sobre ${D2(u.inv)} invertidos.`,
+    `Las comisiones suman <b>${(u.fees/u.inv*100).toFixed(2)}%</b> de lo invertido. Con 1 acción por compra pesan más; 2 acciones cada 2 meses con una sola comisión la reducirían a la mitad.`,
+    days<365?'Con menos de 1 año de historia, el % total es más confiable que un retorno anualizado.':'',
+    'Costo estimado: acciones × cierre diario de VOO en la fecha de compra + comisión convertida a la TRM de hoy. No es un extracto de Trii.'
+  ].filter(Boolean);
+  $('perf-insights').innerHTML='<h3>Lectura del rendimiento</h3><ul style="margin-left:1.2rem;line-height:1.7;font-size:.92rem">'+notes.map(n=>'<li>'+n+'</li>').join('')+'</ul>';
+};
 })();
